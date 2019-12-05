@@ -8,6 +8,66 @@ require('./bootstrap');
 
 window.Vue = require('vue');
 
+import VueRouter from 'vue-router';
+Vue.use(VueRouter);
+import Swal from 'sweetalert2';
+window.Swal = Swal;
+
+const toast = Swal.mixin({
+    toast: true,
+    position: 'top-end',
+    showConfirmButton: false,
+    timer: 3000,
+    timerProgressBar: true
+  })
+  
+window.toast = toast;
+import { Form, HasError, AlertError } from 'vform'
+window.Form = Form; 
+Vue.component(HasError.name, HasError)
+Vue.component(AlertError.name, AlertError)
+import VueProgressBar from 'vue-progressbar'
+Vue.use(VueProgressBar, {
+    color: 'rgb(143, 255, 199)',
+    failedColor: 'red',
+    height: '2px'
+  })
+
+Vue.filter('capitalize', function (value) {
+    if (!value) return ''
+    value = value.toString()
+    return value.charAt(0).toUpperCase() + value.slice(1)
+  })
+
+let routes =[
+{path: '/dashboard', component: require('./components/Dashboard.vue').default} ,
+{path: '/developer', component: require('./components/Developer.vue').default},
+{path: '/profile', component: require('./components/Profile.vue').default},
+{path: '/users', component: require('./components/Users.vue').default}
+]
+
+const router = new VueRouter({
+    mode: 'history',
+ routes
+});
+
+window.Fire = new Vue();
+
+Vue.component(
+  'passport-clients',
+  require('./components/passport/Clients.vue').default
+);
+
+Vue.component(
+  'passport-authorized-clients',
+  require('./components/passport/AuthorizedClients.vue').default
+);
+
+Vue.component(
+  'passport-personal-access-tokens',
+  require('./components/passport/PersonalAccessTokens.vue').default
+);
+
 /**
  * The following block of code may be used to automatically register your
  * Vue components. It will recursively scan this directory for the Vue
@@ -29,4 +89,5 @@ Vue.component('articles', require('./components/Articles.vue').default);
 
 const app = new Vue({
     el: '#app',
+    router
 });
